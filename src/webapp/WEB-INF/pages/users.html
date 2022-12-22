@@ -12,6 +12,7 @@
         <th scope="col">Name</th>
         <th scope="col">Surname</th>
         <th scope="col">Age</th>
+        <th scope="col">Show</th>
     </tr>
     </thead>
     <tbody>
@@ -19,8 +20,13 @@
         <td th:text="${user.getName()}">
         <td th:text="${user.getSurname()}">
         <td th:text="${user.getAge()}">
+        <td><a th:href="@{/users/{id}(id=${user.getId()})}">show</a></td>
     </tr>
     </tbody>
 </table>
+<br/>
+<hr/>
+
+<a href="/users/new">Create new User</a>
 </body>
 </html>
