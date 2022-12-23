@@ -1,10 +1,8 @@
 package web.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -69,11 +67,7 @@ public class UserController {
      * @return = возвращаемая страница.
      */
     @PostMapping
-    public String create(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "users/new";
-        }
+    public String create(@ModelAttribute("user") User user) {
         userDAO.save(user);
         return "redirect:/users";
     }
@@ -99,12 +93,8 @@ public class UserController {
      * @return = возвращаемая страница.
      */
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult,
+    public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return "users/edit";
-        }
         userDAO.update(id, user);
         return "redirect:/users";
     }
