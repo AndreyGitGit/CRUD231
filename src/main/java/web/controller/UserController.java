@@ -31,7 +31,7 @@ public class UserController {
      */
     @GetMapping()
     public String getAllUsers(Model model) {
-        model.addAttribute("users", userDAO.index());
+        model.addAttribute("users", userDAO.getAll());
         model.addAttribute("title", "Users Table");
         return "users";
     }
@@ -57,7 +57,7 @@ public class UserController {
      */
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
-        return "users/new";
+        return "new";
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserController {
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userDAO.show(id));
-        return "users/edit";
+        return "edit";
     }
 
     /**
