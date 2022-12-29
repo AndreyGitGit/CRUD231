@@ -16,7 +16,7 @@ import web.model.User;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private final UserDAO userDAO;
+    private UserDAO userDAO;
 
     @Autowired
     public UserController(UserDAO userDAO) {
