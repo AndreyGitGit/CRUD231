@@ -1,59 +1,43 @@
 package web.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import web.config.PersistenceJPAConfig;
+import org.springframework.stereotype.Repository;
 import web.model.User;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
-@Transactional
+@Repository
 public class UserDaoImp implements UserDAO {
-    private PersistenceJPAConfig persistenceJPAConfig;
-    private static long USER_COUNT;
-    private final List<User> users;
-
-    @Autowired
-    public UserDaoImp(PersistenceJPAConfig persistenceJPAConfig) {
-        this.persistenceJPAConfig = persistenceJPAConfig;
-    }
-
-    {
-        users = new ArrayList<>();
-
-        users.add(new User(++USER_COUNT, "Ben", "Dark", 25));
-        users.add(new User(++USER_COUNT, "Ben1", "Dark1", 251));
-        users.add(new User(++USER_COUNT, "Ben2", "Dark2", 252));
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<User> getAll() {
-        EntityManager entityManager = null;
-        entityManager = (EntityManager) persistenceJPAConfig.entityManagerFactory();
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     public User show(int id) {
-        return users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        TypedQuery<User> query = entityManager.createQuery(
+                "select u from User u where u.id=:id", User.class
+        );
+        query.setParameter("id", id);
+        return query.getResultList().stream().findAny().orElse(null);
     }
 
     public void save(User user) {
-        user.setId(++USER_COUNT);
-        users.add(user);
+        entityManager.persist(user);
+        entityManager.flush();
     }
 
     public void update(int id, User userUpdateInfo) {
-        User userForUpdate = show(id);
-
-        userForUpdate.setName(userUpdateInfo.getName());
-        userForUpdate.setSurname(userUpdateInfo.getSurname());
-        userForUpdate.setAge(userUpdateInfo.getAge());
+        entityManager.merge(userUpdateInfo);
+        entityManager.flush();
     }
 
     public void delete(int id) {
-        users.removeIf(user -> user.getId() == id);
+        User user = show(id);
+        entityManager.remove(user);
+        entityManager.flush();
     }
 }
