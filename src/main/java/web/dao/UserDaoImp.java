@@ -5,36 +5,31 @@ import web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
-
+    @Override
     public List<User> getAll() {
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
-
+    @Override
     public User show(int id) {
-        TypedQuery<User> query = entityManager.createQuery(
-                "select u from User u where u.id=:id", User.class
-        );
-        query.setParameter("id", id);
-        return query.getResultList().stream().findAny().orElse(null);
+        return entityManager.find(User.class, id);
     }
-
+    @Override
     public void save(User user) {
         entityManager.persist(user);
         entityManager.flush();
     }
-
-    public void update(int id, User userUpdateInfo) {
+    @Override
+    public void update(User userUpdateInfo) {
         entityManager.merge(userUpdateInfo);
         entityManager.flush();
     }
-
+    @Override
     public void delete(int id) {
         User user = show(id);
         entityManager.remove(user);
