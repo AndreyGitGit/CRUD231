@@ -26,16 +26,19 @@ public class UserServiceImp implements UserService {
         return userDAO.show(id);
     }
 
+    @Transactional
     @Override
     public void save(User user) {
         userDAO.save(user);
     }
 
+    @Transactional
     @Override
     public void update(User userUpdateInfo) {
         userDAO.update(userUpdateInfo);
     }
 
+    @Transactional
     @Override
     public void delete(int id) {
         userDAO.delete(id);
