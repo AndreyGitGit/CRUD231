@@ -8,7 +8,7 @@ import web.model.User;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImp implements UserService {
     private final UserDAO userDAO;
 
